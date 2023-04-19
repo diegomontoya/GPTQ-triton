@@ -9,8 +9,8 @@ import transformers
 
 DEBUG = False 
 
-torch.backends.cuda.matmul.allow_tf32 = False
-torch.backends.cudnn.allow_tf32 = False
+torch.backends.cuda.matmul.allow_tf32 = True
+torch.backends.cudnn.allow_tf32 = True
 
 
 class GPTQ:
