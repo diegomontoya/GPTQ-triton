@@ -10,7 +10,9 @@ import triton
 import triton.language as tl
 
 # triton >= 2.1.0 check
-triton_2_1 = LooseVersion(triton.__version__) >= LooseVersion('2.1.0')
+# triton_2_1 = LooseVersion(triton.__version__) >= LooseVersion('2.1.0')
+# print(f"triton version: {triton.__version__}")
+# print(f"triton check: {triton_2_1}")
 
 @triton.jit
 def rotate_half_kernel(
@@ -48,10 +50,10 @@ def rotate_half_kernel(
     # As sometimes happens, just calculating this on the fly is faster than loading it from memory.
     # Use `tl.libdevice.exp` rather than `tl.exp` -- the latter is less accurate.
     # triton 2.1.0 moved tl.libdevice.exp to tl.math.exp
-    if triton_2_1:
-        freq = tl.math.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
-    else:
-        freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+    #if triton_2_1:
+    freq = tl.math.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+    #else:
+    #    freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
 
     cos = tl.cos(freq).to(tl.float32)
     sin = tl.sin(freq).to(tl.float32)
