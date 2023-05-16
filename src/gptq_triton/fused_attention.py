@@ -51,9 +51,9 @@ def rotate_half_kernel(
     # Use `tl.libdevice.exp` rather than `tl.exp` -- the latter is less accurate.
     # triton 2.1.0 moved tl.libdevice.exp to tl.math.exp
     #if triton_2_1:
-    #freq = tl.math.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+    freq = tl.math.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
     #else:
-    freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+    #freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
 
     cos = tl.cos(freq).to(tl.float32)
     sin = tl.sin(freq).to(tl.float32)
