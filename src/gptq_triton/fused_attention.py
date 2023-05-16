@@ -44,7 +44,12 @@ def rotate_half_kernel(
     position_id = tl.load(position_ids_ptr + batch * position_ids_batch_stride + seq)
     # As sometimes happens, just calculating this on the fly is faster than loading it from memory.
     # Use `tl.libdevice.exp` rather than `tl.exp` -- the latter is less accurate.
-    freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+	# triton 2.1.0 moved tl.libdevice.exp to tl.math.exp
+	if hasattr(tl, 'mathlib'):
+		freq = tl.mathlib.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+    else:
+        freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+
     cos = tl.cos(freq).to(tl.float32)
     sin = tl.sin(freq).to(tl.float32)
 
