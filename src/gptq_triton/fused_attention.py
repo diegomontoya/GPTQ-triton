@@ -248,4 +248,7 @@ class QuantLlamaAttention(nn.Module):
         attn_output = attn_output.transpose(1, 2).reshape(bsz, q_len, self.hidden_size)
         attn_output = self.o_proj(attn_output)
 
-        return attn_output, None, past_key_value
+        if not output_attentions:
+            attn_weights = None
+
+        return attn_output, attn_weights, past_key_value
