@@ -45,10 +45,12 @@ def rotate_half_kernel(
     # As sometimes happens, just calculating this on the fly is faster than loading it from memory.
     # Use `tl.libdevice.exp` rather than `tl.exp` -- the latter is less accurate.
     # triton 2.1.0 moved tl.libdevice.exp to tl.math.exp
-    #if hasattr(tl, 'libdevice'):
-    #    freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
-    #else:
-    freq = tl.math.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+    from distutils.version import LooseVersion
+
+    if LooseVersion(triton.__version__) >= LooseVersion('2.1.0'):
+        freq = tl.math.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
+    else:
+        freq = tl.libdevice.exp((col + tl.arange(0, BLOCK_WIDTH)).to(tl.float32) * INV_BASE) * position_id
 
     cos = tl.cos(freq).to(tl.float32)
     sin = tl.sin(freq).to(tl.float32)
