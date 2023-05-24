@@ -75,7 +75,7 @@ def main():
 		}))
 
 	# Copy the config
-	for file in ['config.json', 'generation_config.json', 'special_tokens_map.json', 'tokenizer_config.json', 'tokenizer.model']:
+	for file in ['config.json', 'generation_config.json', 'special_tokens_map.json', 'tokenizer_config.json', 'tokenizer.json', 'tokenizer.model']:
 		shutil.copy(args.model + '/' + file, args.save / file)
 	
 	print('Done.')
